@@ -1,4 +1,9 @@
-import { serve, Handler } from "https://deno.land/std@0.135.0/http/server.ts";
+import { Application } from "https://deno.land/x/oak/mod.ts";
 
-console.log("http://localhost:8000/");
-serve((req: Request) => new Response("Hello World\n"), { port: 8000 });
+const app = new Application();
+
+app.use((ctx: any) => {
+  ctx.response.body = "Hello world!";
+});
+
+await app.listen({ port: 8000 });
