@@ -10,6 +10,10 @@ server.get("/ping", (req, resp) => {
     resp.send({ "message": "pong" });
 })
 
+server.get("/health", (req, resp) => {
+    resp.send({ "message": "healthy" });
+})
+
 const start = async () => {
     try {
         await server.listen(Port);
