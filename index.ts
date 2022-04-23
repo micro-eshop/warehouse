@@ -1,9 +1,15 @@
-import { Application } from "https://deno.land/x/oak/mod.ts";
+import fastify from 'fastify'
 
-const app = new Application();
+const server = fastify()
 
-app.use((ctx: any) => {
-  ctx.response.body = "Hello world!";
-});
+server.get('/ping', async (request, reply) => {
+  return 'pong\n'
+})
 
-await app.listen({ port: 8000 });
+server.listen(8080, (err, address) => {
+  if (err) {
+    console.error(err)
+    process.exit(1)
+  }
+  console.log(`Server listening at ${address}`)
+})
