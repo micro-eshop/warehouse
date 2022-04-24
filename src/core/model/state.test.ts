@@ -1,4 +1,4 @@
-import { zero, getAvailableQuantity, create } from './model';
+import { zero, getAvailableQuantity, create } from './state';
 
 test('test get available quantity when state is empty', () => {
     const id = "test"

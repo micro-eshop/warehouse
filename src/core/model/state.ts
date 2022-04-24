@@ -1,5 +1,5 @@
 
-type CatalogItemId = string
+export type CatalogItemId = string
 
 export interface CatalogItemWarehouseState {
     readonly catalogItemId: CatalogItemId;
