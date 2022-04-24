@@ -1,21 +1,24 @@
-import { fastify } from 'fastify';
+import { fastify, FastifyInstance } from 'fastify';
+import { Server, IncomingMessage, ServerResponse } from 'http';
 import pino from 'pino';
+import health from './handlers/health';
 const Port = process.env.PORT || 7000;
 
 const server = fastify({
     logger: pino({ level: 'info' })
 });
 
-server.get("/ping", (req, resp) => {
-    resp.send({ "message": "pong" });
-})
-
-server.get("/health", (req, resp) => {
-    resp.send({ "message": "healthy" });
-})
+function setupEndpoints(server: FastifyInstance<
+    Server,
+    IncomingMessage,
+    ServerResponse
+>) {
+    health(server);
+}
 
 const start = async () => {
     try {
+        setupEndpoints(server);
         await server.listen(Port);
         console.log('Server started successfully');
     } catch (err) {
