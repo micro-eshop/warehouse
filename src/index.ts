@@ -2,6 +2,7 @@ import { fastify, FastifyInstance } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import pino from 'pino';
 import health from './handlers/health';
+import warehouse from './handlers/warehouse';
 const Port = process.env.PORT || 7000;
 
 const server = fastify({
@@ -14,6 +15,7 @@ function setupEndpoints(server: FastifyInstance<
     ServerResponse
 >) {
     health(server);
+    warehouse(server);
 }
 
 const start = async () => {

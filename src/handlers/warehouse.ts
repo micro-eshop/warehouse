@@ -7,8 +7,9 @@ export default function(server: FastifyInstance<
     IncomingMessage,
     ServerResponse
   >) {
-    server.get("/warehouse/{catalog_id}/state", (req, resp) => {
-        resp.send({ "message": "pong" });
+    server.get("/warehouse/:catalogid/state", (req, resp) => {
+        const p = req.params as any;
+        resp.send({ "message": `pong ${p.catalogid}` });
     })
     
 }

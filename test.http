@@ -1,0 +1,1 @@
+GET http://localhost:7000/warehouse/2/state HTTP/1.1
