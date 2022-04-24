@@ -1,0 +1,46 @@
+version: '3.8'
+
+volumes:
+  postgres-data:
+
+    null
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VARIANT: "16-bullseye"
+
+    # Security Opt and cap_add allow for C++ based debuggers to work. 
+    # See `runArgs`: https://github.com/Microsoft/vscode-docs/blob/main/docs/remote/devcontainerjson-reference.md
+    #     security_opt:
+    #       - seccomp:unconfined
+    #     cap_add:
+    #       - SYS_PTRACE
+
+    volumes:
+      - ..:/workspace:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  db:
+    image: redis:6-bullseye
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+  nats:
+    image: 'nats:latest'
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
