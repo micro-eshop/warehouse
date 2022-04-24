@@ -1,4 +1,4 @@
-import { CatalogItemId, getAvailableQuantity } from "../model/state";
+import { CatalogItemId, CatalogItemWarehouseState, getAvailableQuantity } from "../model/state";
 import { CatalogItemWarehouseStateRepository } from "../repositories/repo";
 
 export function getCatalogWarehouseItemAvailableQuantity(repo: CatalogItemWarehouseStateRepository) {
@@ -10,3 +10,10 @@ export function getCatalogWarehouseItemAvailableQuantity(repo: CatalogItemWareho
         return getAvailableQuantity(itemOpt);
     }
 }
+
+export function saveCatalogWarehouseState(repo: CatalogItemWarehouseStateRepository) {
+    return async (state: CatalogItemWarehouseState) => {
+        await repo.save(state);
+    }
+}
+

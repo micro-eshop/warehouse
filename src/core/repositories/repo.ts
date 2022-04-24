@@ -1,7 +1,7 @@
-import { Option } from "fp-ts/lib/Option";
-import { CatalogItemWarehouseState } from "../model/state";
+import { CatalogItemId, CatalogItemWarehouseState } from "../model/state";
 
 
 export interface CatalogItemWarehouseStateRepository {
-    getCatalogWarehouseState(catalogItemId: string): Promise<CatalogItemWarehouseState | null>;
+    getCatalogWarehouseState(catalogItemId: CatalogItemId): Promise<CatalogItemWarehouseState | null>;
+    save(state: CatalogItemWarehouseState): Promise<void>
 }
