@@ -15,6 +15,14 @@ export function zero(id: CatalogItemId) : CatalogItemWarehouseState {
     };
 }
 
+export function create(id: CatalogItemId, availableQuantity: number, reservedQuantity: number) : CatalogItemWarehouseState {
+    return {
+        catalogItemId: id,
+        availableQuantity: availableQuantity,
+        reservedQuantity: reservedQuantity
+    };
+}
+
 export function getAvailableQuantity(state: CatalogItemWarehouseState) : number {
     const possibleQuantity = state.availableQuantity - state.reservedQuantity;
     if(possibleQuantity < 0) {
