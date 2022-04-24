@@ -20,7 +20,7 @@ const start = async () => {
     try {
         setupEndpoints(server);
         await server.listen(Port);
-        console.log('Server started successfully');
+        console.log('Server started successfully.');
     } catch (err) {
         server.log.error(err);
         process.exit(1);
