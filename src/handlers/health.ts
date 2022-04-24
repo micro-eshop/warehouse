@@ -12,7 +12,7 @@ export default function(server: FastifyInstance<
     })
     
     server.get("/health", (req, resp) => {
-        resp.send({ "message": "healthy" });
         resp.code(200)
+        resp.send({ "message": "healthy" });
     })
 }
