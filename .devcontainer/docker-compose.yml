@@ -1,23 +1,15 @@
 version: '3.8'
 
-volumes:
-  postgres-data:
-
-    null
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        VARIANT: "16-bullseye"
-
-    # Security Opt and cap_add allow for C++ based debuggers to work. 
-    # See `runArgs`: https://github.com/Microsoft/vscode-docs/blob/main/docs/remote/devcontainerjson-reference.md
-    #     security_opt:
-    #       - seccomp:unconfined
-    #     cap_add:
-    #       - SYS_PTRACE
+        # Update 'VARIANT' to pick a version of .NET: 3.1, 5.0, 6.0
+        VARIANT: "6.0-bullseye"
+        # Optional version of Node.js
+        NODE_VERSION: "lts/*"
 
     volumes:
       - ..:/workspace:cached
@@ -44,3 +36,20 @@ services:
       - 4222:4222
       - 6222:6222
       - 8222:8222
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+  seq:
+    image: datalust/seq 
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:80
+      
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+volumes:
+  postgres-data: null

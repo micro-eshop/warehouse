@@ -1,0 +1,7 @@
+Roslynator.Analyzers
+AsyncFixer
+LanguageExt.Core
+System.Linq.Async
+ClrHeapAllocationAnalyzer
+StackExchange.Redis
+StronglyTypedId
