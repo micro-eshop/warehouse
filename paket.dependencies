@@ -18,7 +18,7 @@ nuget Serilog.Sinks.Trace
 nuget Serilog.Formatting.Elasticsearch
 nuget Serilog.Sinks.Seq
 nuget Microsoft.Extensions.Hosting.Abstractions
-nuget StronglyTypedId >= 1.0.0-beta06
+nuget StronglyTypedId prerelease
 nuget NATS.Client  
 nuget Microsoft.Tye.Extensions.Configuration
 
@@ -36,5 +36,5 @@ nuget xunit
 nuget xunit.runner.visualstudio
 nuget Moq
 nuget coverlet.collector
-nuget DotNet.Testcontainers >= 1.6.0-beta.2130
+nuget DotNet.Testcontainers prerelease
 nuget Microsoft.NET.Test.Sdk
