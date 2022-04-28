@@ -5,3 +5,4 @@ System.Linq.Async
 ClrHeapAllocationAnalyzer
 StackExchange.Redis
 StronglyTypedId
+MediatR

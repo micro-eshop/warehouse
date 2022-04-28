@@ -22,6 +22,8 @@ nuget StronglyTypedId prerelease
 nuget NATS.Client  
 nuget Microsoft.Tye.Extensions.Configuration
 
+nuget MediatR
+nuget MediatR.Extensions.Microsoft.DependencyInjection
 nuget Roslynator.Analyzers
 nuget SonarAnalyzer.CSharp
 nuget AsyncFixer
