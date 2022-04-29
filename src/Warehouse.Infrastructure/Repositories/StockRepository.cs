@@ -1,3 +1,4 @@
+using System.Threading;
 using LanguageExt;
 
 using StackExchange.Redis;
@@ -17,8 +18,9 @@ internal class RedisWarehouseRepository : IWarehouseReader
         _database = database;
     }
 
-    public async Task<Option<Stock>> GetStock(ProductId productId, WarehouseId warehouseId)
+    public async Task<Option<Stock>> GetStock(ProductId productId, WarehouseId warehouseId, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var stock = await _database.StringGetAsync(GetWarehouseQuantityQuantityKey(productId, warehouseId));
         if (stock.IsNullOrEmpty || !stock.IsInteger)
         {

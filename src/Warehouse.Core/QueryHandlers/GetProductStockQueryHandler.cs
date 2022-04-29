@@ -18,7 +18,7 @@ public class GetProductStockQueryQueryHandler : IRequestHandler<GetProductStockQ
 
     public async Task<Option<AvailableQuantity>> Handle(GetProductStockQuery request, CancellationToken cancellationToken)
     {
-        var result = await _warehouseReader.GetStock(request.ProductId, request.WarehouseId);
+        var result = await _warehouseReader.GetStock(request.ProductId, request.WarehouseId, cancellationToken);
 
         return result.Map(stock => stock.GetAvailableQuantity()).Map(availableQuantity => new AvailableQuantity(availableQuantity));
     }
