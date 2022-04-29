@@ -11,11 +11,11 @@ namespace Warehouse.Infrastructure.Repositories;
 
 internal class RedisWarehouseRepository : IWarehouseReader
 {
-    private IDatabase _database;
+    private readonly IDatabase _database;
 
-    public RedisWarehouseRepository(IDatabase database)
+    public RedisWarehouseRepository(IConnectionMultiplexer connectionMultiplexer)
     {
-        _database = database;
+        _database = connectionMultiplexer.GetDatabase();
     }
 
     public async Task<Option<Stock>> GetStock(ProductId productId, WarehouseId warehouseId, CancellationToken cancellationToken)
@@ -41,11 +41,5 @@ internal class RedisWarehouseRepository : IWarehouseReader
     private static string GetWarehouseQuantityQuantityKey(ProductId productId, WarehouseId warehouseId)
     {
         return $"{{stock/{warehouseId.Value}}}/{productId.Value}";
-    }
-
-    public static RedisWarehouseRepository Create(ConnectionMultiplexer connection)
-    {
-        var database = connection.GetDatabase();
-        return new RedisWarehouseRepository(database);
     }
 }

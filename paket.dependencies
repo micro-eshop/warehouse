@@ -5,6 +5,7 @@ framework: net6.0
 
 nuget Swashbuckle.AspNetCore
 
+nuget AspNetCore.HealthChecks.Redis
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.ClientInfo
 nuget Serilog.Enrichers.Environment
