@@ -1,11 +1,15 @@
 using Warehouse.Infrastructure.Logging;
+using MediatR;
+using Warehouse.Core.QueryHandlers;
+using Warehouse.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.UseLogging("Warehouse.Api");
+builder.AddInfrastructure();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddMediatR(typeof(GetProductStockQueryQueryHandler));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
