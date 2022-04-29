@@ -11,6 +11,7 @@ using static LanguageExt.Prelude;
 using FluentAssertions;
 using Xunit;
 using LanguageExt.UnsafeValueAccess;
+using System;
 
 namespace Warehouse.Core.Tests.QueryHandlers;
 
@@ -39,7 +40,7 @@ public class GetProductStockQueryQueryHandlerTests
         mockRepo.Verify(x => x.GetStock(It.IsAny<ProductId>(), It.IsAny<WarehouseId>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-        [Fact]
+    [Fact]
     public async Task GetProductStockWhenExists_ShouldReturnSomeStock()
     {
         // Arrange
@@ -59,6 +60,26 @@ public class GetProductStockQueryQueryHandlerTests
         // Assert
         subject.IsSome.Should().BeTrue();
         subject.ValueUnsafe().Should().Be(new AvailableQuantity(5));
+
+        mockRepo.Verify(x => x.GetStock(It.IsAny<ProductId>(), It.IsAny<WarehouseId>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetProductStockWhenRepoThrowsException()
+    {
+        // Arrange
+        var productId = new ProductId(1);
+        var warehouseId = new WarehouseId(1);
+        var stock = new Stock(productId, warehouseId, new StockQuantity(10, 5));
+        var mockRepo = new Mock<IWarehouseReader>();
+        mockRepo.Setup(x => x.GetStock(It.IsAny<ProductId>(), It.IsAny<WarehouseId>(), It.IsAny<CancellationToken>()))
+            .Throws(new Exception("Test exception"));
+        var query = new GetProductStockQuery(productId, warehouseId);
+
+        var handler = new GetProductStockQueryQueryHandler(mockRepo.Object);
+
+        // Act and test
+        Assert.ThrowsAnyAsync<Exception>(() => handler.Handle(query, CancellationToken.None));
 
         mockRepo.Verify(x => x.GetStock(It.IsAny<ProductId>(), It.IsAny<WarehouseId>(), It.IsAny<CancellationToken>()), Times.Once);
     }
