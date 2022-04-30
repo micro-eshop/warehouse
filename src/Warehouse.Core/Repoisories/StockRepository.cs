@@ -8,3 +8,8 @@ public interface IWarehouseReader
 {
     Task<Option<Stock>> GetStock(ProductId productId, WarehouseId warehouseId, CancellationToken cancellationToken);
 }
+
+public interface IWarehouseWriter
+{
+    Task Write(Stock stock, CancellationToken cancellationToken);
+}
