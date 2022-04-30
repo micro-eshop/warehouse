@@ -18,9 +18,9 @@ public class CreateWarehouseStateCommandHandler : IRequestHandler<CreateWarehous
     public async Task<Unit> Handle(CreateWarehouseStateCommand request, CancellationToken cancellationToken)
     {
         var warehouseIds = Enumerable.Range(1, 10).Select(i => new WarehouseId(i));
-        var stock = CreateStocks(request.ProductId, warehouseIds);
+        var stocks = CreateStocks(request.ProductId, warehouseIds);
 
-        var result = await _warehouseWriter.Write(stock, cancellationToken);
+        var result = await _warehouseWriter.Write(stocks.ToList(), cancellationToken);
 
         return Unit.Value;
     }

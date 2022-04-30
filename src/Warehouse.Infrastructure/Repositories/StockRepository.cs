@@ -9,7 +9,7 @@ using static LanguageExt.Prelude;
 
 namespace Warehouse.Infrastructure.Repositories;
 
-internal class RedisWarehouseRepository : IWarehouseReader
+internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
 {
     private readonly IDatabase _database;
 
@@ -41,5 +41,22 @@ internal class RedisWarehouseRepository : IWarehouseReader
     private static string GetWarehouseQuantityQuantityKey(ProductId productId, WarehouseId warehouseId)
     {
         return $"{{stock/{warehouseId.Value}}}/{productId.Value}";
+    }
+
+    public async Task<Result<Unit>> Write(IReadOnlyCollection<Stock> stocks, CancellationToken cancellationToken)
+    {
+        List<Task> addTasks = new List<Task>(stocks.Count * 2);
+        IBatch batch = _database.CreateBatch();
+
+        foreach(var stock in stocks)
+        {
+            addTasks.Add(batch.StringSetAsync(GetWarehouseQuantityQuantityKey(stock.ProductId, stock.WarehouseId), stock.Quantity.WarehouseQuantity));
+            addTasks.Add(batch.StringSetAsync(GetReservedQuantityKey(stock.ProductId, stock.WarehouseId), stock.Quantity.ReservedQuantity));
+        }
+        batch.Execute();
+        Task[] tasks = addTasks.ToArray();
+        await Task.WhenAll(tasks);
+
+        return Result.UnitResult;
     }
 }
