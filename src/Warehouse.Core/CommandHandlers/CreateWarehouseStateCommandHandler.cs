@@ -1,6 +1,7 @@
 using MediatR;
 
 using Warehouse.Core.Commands;
+using Warehouse.Core.Model;
 using Warehouse.Core.Repositories;
 
 namespace Warehouse.Core.CommandHandlers;
@@ -14,9 +15,22 @@ public class CreateWarehouseStateCommandHandler : IRequestHandler<CreateWarehous
         _warehouseWriter = warehouseWriter;
     }
 
-    public Task<Unit> Handle(CreateWarehouseStateCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateWarehouseStateCommand request, CancellationToken cancellationToken)
     {
-        var ids = 
-        var stock = new Stock(request.ProductId, , new StockQuantity(request.Quantity, 0));
+        var warehouseIds = Enumerable.Range(1, 10).Select(i => new WarehouseId(i));
+        var stock = CreateStocks(request.ProductId, warehouseIds);
+
+        var result = await _warehouseWriter.Write(stock, cancellationToken);
+
+        return Unit.Value;
+    }
+
+
+    private static IEnumerable<Stock> CreateStocks(ProductId productId, IEnumerable<WarehouseId> warehouseIds)
+    {
+        foreach (var id in warehouseIds)
+        {
+            yield return new Stock(productId, id, new StockQuantity(10, 1));
+        }
     }
 }

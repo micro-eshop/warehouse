@@ -11,5 +11,5 @@ public interface IWarehouseReader
 
 public interface IWarehouseWriter
 {
-    Task Write(Stock stock, CancellationToken cancellationToken);
+    Task<Result<Unit>> Write(IEnumerable<Stock> stocks, CancellationToken cancellationToken);
 }
