@@ -14,6 +14,7 @@ public static class ServicesCollectionExtensions
     {
         builder.Services.AddSingleton(ConnectionMultiplexerProvider.CreateMultiplexer(builder.Configuration.GetConnectionString("Redis")));
         builder.Services.AddTransient<IWarehouseReader, RedisWarehouseRepository>();
+        builder.Services.AddTransient<IWarehouseWriter, RedisWarehouseRepository>();
         return builder;
     }
 }

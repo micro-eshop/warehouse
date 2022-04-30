@@ -80,72 +80,72 @@ public readonly struct Result<A> : IEquatable<Result<A>>
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return Result<C>.Ok(func(Success));
+        return Result<C>.Ok(func(Success!));
     }
 
     public async Task<Result<C>> MapAsync<C>(Func<A, Task<C>> func)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return Result<C>.Ok(await func(Success).ConfigureAwait(false));
+        return Result<C>.Ok(await func(Success!).ConfigureAwait(false));
     }
 
     public Result<C> Map<C, CD>(Func<A, CD, C> func, CD param1)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return Result<C>.Ok(func(Success, param1));
+        return Result<C>.Ok(func(Success!, param1));
     }
 
     public Result<C> Map<C, CD, CD1>(Func<A, CD, CD1, C> func, CD param1, CD1 param2)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return Result<C>.Ok(func(Success, param1, param2));
+        return Result<C>.Ok(func(Success!, param1, param2));
     }
 
     public async Task<Result<C>> MapAsync<C, CD>(Func<A, CD, Task<C>> func, CD param1)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return Result<C>.Ok(await func(Success, param1).ConfigureAwait(false));
+        return Result<C>.Ok(await func(Success!, param1).ConfigureAwait(false));
     }
 
     public async Task<Result<C>> MapAsync<C, CD, CD1>(Func<A, CD, CD1, Task<C>> func, CD param1, CD1 param2)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return Result<C>.Ok(await func(Success, param1, param2).ConfigureAwait(false));
+        return Result<C>.Ok(await func(Success!, param1, param2).ConfigureAwait(false));
     }
 
     public Result<C> Bind<C>(Func<A, Result<C>> func)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return func(Success);
+        return func(Success!);
     }
 
     public Result<C> Bind<C, CD>(Func<A, CD, Result<C>> func, CD param)
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return func(Success, param);
+        return func(Success!, param);
     }
 
     public async Task<Result<A>> BindErrorAsync(Func<Exception, Task<Result<A>>> func)
@@ -171,9 +171,9 @@ public readonly struct Result<A> : IEquatable<Result<A>>
     {
         if (_state == ResultState.Error)
         {
-            return Result<C>.Failure(Error);
+            return Result<C>.Failure(Error!);
         }
-        return await func(Success).ConfigureAwait(false);
+        return await func(Success!).ConfigureAwait(false);
     }
 
     public async Task<Result<C>> BindAsync<C, CD>(Func<A, CD, Task<Result<C>>> func, CD param)
@@ -198,9 +198,9 @@ public readonly struct Result<A> : IEquatable<Result<A>>
     {
         if (_state == ResultState.Error)
         {
-            return f(Error);
+            return f(Error!);
         }
-        return Success;
+        return Success!;
     }
 
     public A IfFailure(A val)
@@ -216,7 +216,7 @@ public readonly struct Result<A> : IEquatable<Result<A>>
     {
         if (_state == ResultState.Error)
         {
-            await f(Error).ConfigureAwait(false);
+            await f(Error!).ConfigureAwait(false);
         }
     }
 
@@ -284,11 +284,11 @@ public readonly struct Result<A> : IEquatable<Result<A>>
     {
         if (_state == ResultState.Succeed)
         {
-            return Succ(Success);
+            return Succ(Success!);
         }
         else
         {
-            return Fail(Error);
+            return Fail(Error!);
         }
     }
 
@@ -333,8 +333,7 @@ public readonly struct Result<A> : IEquatable<Result<A>>
 
     public override bool Equals(object obj)
     {
-        if (obj is null) return false;
-        return obj is Result<A> other && Equals(other);
+        return obj is not null && obj is Result<A> other && Equals(other);
     }
 
     public override int GetHashCode()
@@ -360,26 +359,26 @@ public static class Result
     {
         if (self._state == Result<T>.ResultState.Error)
         {
-            return Result<TT>.Failure(self.Error);
+            return Result<TT>.Failure(self.Error!);
         }
-        return Result<TT>.Ok(selector(self.Success));
+        return Result<TT>.Ok(selector(self.Success!));
     }
 
     public static async ValueTask<Result<TT>> Select<T, TT>(this Result<T> self, Func<T, ValueTask<TT>> selector)
     {
         if (self._state == Result<T>.ResultState.Error)
         {
-            return Result<TT>.Failure(self.Error);
+            return Result<TT>.Failure(self.Error!);
         }
-        return Result<TT>.Ok(await selector(self.Success).ConfigureAwait(false));
+        return Result<TT>.Ok(await selector(self.Success!).ConfigureAwait(false));
     }
 
     public static async Task<Result<TT>> Select<T, TT>(this Result<T> self, Func<T, Task<TT>> selector)
     {
         if (self._state == Result<T>.ResultState.Error)
         {
-            return Result<TT>.Failure(self.Error);
+            return Result<TT>.Failure(self.Error!);
         }
-        return Result<TT>.Ok(await selector(self.Success).ConfigureAwait(false));
+        return Result<TT>.Ok(await selector(self.Success!).ConfigureAwait(false));
     }
 }

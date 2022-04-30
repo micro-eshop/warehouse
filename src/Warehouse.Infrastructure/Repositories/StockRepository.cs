@@ -35,12 +35,12 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
 
     private static string GetReservedQuantityKey(ProductId productId, WarehouseId warehouseId)
     {
-        return $"{{reserved/{warehouseId.Value}}}/{productId.Value}";
+        return $"{{reserved/{warehouseId.Value.ToString()}}}/{productId.Value.ToString()}";
     }
 
     private static string GetWarehouseQuantityQuantityKey(ProductId productId, WarehouseId warehouseId)
     {
-        return $"{{stock/{warehouseId.Value}}}/{productId.Value}";
+        return $"{{stock/{warehouseId.Value.ToString()}}}/{productId.Value.ToString()}";
     }
 
     public async Task<Result<Unit>> Write(IReadOnlyCollection<Stock> stocks, CancellationToken cancellationToken)

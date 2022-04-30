@@ -65,6 +65,7 @@ public static class Extensionss
 
     public static IHostBuilder UseLogging(this WebApplicationBuilder builder, string applicationName)
     {
+        ArgumentNullException.ThrowIfNull(applicationName, nameof(applicationName));
         return builder.Host.UseSerilog((context, configuration) =>
         {
             var serilogOptions = context.Configuration.GetSection("Serilog").Get<SerilogOptions>();

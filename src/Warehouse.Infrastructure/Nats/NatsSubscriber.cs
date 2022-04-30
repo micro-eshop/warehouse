@@ -15,12 +15,12 @@ namespace Warehouse.Infrastructure.Nats;
 
 internal class ProductCreated
 {
-    public int Id { get; init; }
-    public string? Name { get; init; }
-    public string? Brand { get; init; }
-    public string? Description { get; init; }
-    public double Price { get; init; }
-    public double? PromotionPrice { get; init; }
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Brand { get; set; }
+    public string? Description { get; set; }
+    public double Price { get; set; }
+    public double? PromotionPrice { get; set; }
 }
 
 [JsonSourceGenerationOptions(
