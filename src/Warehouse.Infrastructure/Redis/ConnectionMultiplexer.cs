@@ -1,5 +1,7 @@
+using System.Runtime.CompilerServices;
 using StackExchange.Redis;
 
+[assembly: InternalsVisibleTo("Warehouse.FunctionalTests")]
 namespace Warehouse.Infrastructure.Redis;
 
 internal static class ConnectionMultiplexerProvider

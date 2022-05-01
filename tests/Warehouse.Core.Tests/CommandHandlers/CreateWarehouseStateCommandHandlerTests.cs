@@ -20,7 +20,7 @@ public class CreateWarehouseStateCommandHandlersTests
     {
         // Arrange
         var repo = new Mock<IWarehouseWriter>();
-        repo.Setup(x => x.Write(It.IsAny<IEnumerable<Stock>>(), It.IsAny<CancellationToken>()))
+        repo.Setup(x => x.Write(It.IsAny<IReadOnlyCollection<Stock>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.FromResult(Result.UnitResult));
         var productId = new ProductId(1);
         var command = new CreateWarehouseStateCommand(productId);
@@ -32,6 +32,6 @@ public class CreateWarehouseStateCommandHandlersTests
         // Assert
         Assert.Equal(Unit.Value, subject);
 
-        repo.Verify(x => x.Write(It.IsAny<IEnumerable<Stock>>(), It.IsAny<CancellationToken>()), Times.Once);
+        repo.Verify(x => x.Write(It.IsAny<IReadOnlyCollection<Stock>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

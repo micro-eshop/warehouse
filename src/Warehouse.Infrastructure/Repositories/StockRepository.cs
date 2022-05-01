@@ -1,12 +1,15 @@
-using System.Threading;
+using System.Runtime.CompilerServices;
+
 using LanguageExt;
 
 using StackExchange.Redis;
 
 using Warehouse.Core.Model;
 using Warehouse.Core.Repositories;
+
 using static LanguageExt.Prelude;
 
+[assembly: InternalsVisibleTo("Warehouse.FunctionalTests")]
 namespace Warehouse.Infrastructure.Repositories;
 
 internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
