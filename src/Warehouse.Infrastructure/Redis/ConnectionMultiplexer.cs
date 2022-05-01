@@ -6,10 +6,10 @@ namespace Warehouse.Infrastructure.Redis;
 
 internal static class ConnectionMultiplexerProvider
 {
-    public static IConnectionMultiplexer CreateMultiplexer(string redisConnection)
+    public static async Task<IConnectionMultiplexer> CreateMultiplexer(string redisConnection)
     {
         var options = ConfigurationOptions.Parse(redisConnection);
         options.AbortOnConnectFail = false;
-        return ConnectionMultiplexer.Connect(options);
+        return await ConnectionMultiplexer.ConnectAsync(options);
     }
 }

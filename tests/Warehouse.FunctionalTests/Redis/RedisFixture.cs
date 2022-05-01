@@ -28,7 +28,7 @@ public class RedisFixture : IAsyncLifetime, IDisposable
     public async Task InitializeAsync()
     {
         await Redis.StartAsync();
-        RedisConnection = ConnectionMultiplexerProvider.CreateMultiplexer(Redis.ConnectionString);
+        RedisConnection = await ConnectionMultiplexerProvider.CreateMultiplexer(Redis.ConnectionString);
     }
 
     public async Task DisposeAsync()

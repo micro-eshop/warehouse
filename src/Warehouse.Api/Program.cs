@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.UseLogging("Warehouse.Api");
-builder.AddInfrastructure();
+await builder.AddInfrastructure();
 builder.Services.AddControllers();
 builder.Services.AddMediatR(typeof(GetProductStockQueryQueryHandler));
 builder.Services.AddEndpointsApiExplorer();
