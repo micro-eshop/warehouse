@@ -10,6 +10,8 @@ internal static class ConnectionMultiplexerProvider
     {
         var options = ConfigurationOptions.Parse(redisConnection);
         options.AbortOnConnectFail = false;
+        options.ConnectTimeout = 5000;
+        options.ResolveDns = bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var _);
         return await ConnectionMultiplexer.ConnectAsync(options);
     }
 }
