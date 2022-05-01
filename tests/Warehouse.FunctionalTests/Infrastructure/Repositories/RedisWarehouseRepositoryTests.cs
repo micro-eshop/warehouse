@@ -1,6 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using LanguageExt.UnsafeValueAccess;
+
 using Warehouse.Core.Model;
 using Warehouse.FunctionalTests.Redis;
 using Warehouse.Infrastructure.Repositories;
@@ -30,6 +32,7 @@ public class RedisWarehouseRepositoryTests : IClassFixture<RedisFixture>
 
         var result = await _repository.GetStock(productId, warehouseId, CancellationToken.None);
 
-        Assert.Equal(stock, result);
+        Assert.True(result.IsSome);
+        Assert.Equal(stock, result.ValueUnsafe());
     }
 }
