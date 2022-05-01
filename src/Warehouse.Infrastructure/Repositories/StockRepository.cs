@@ -25,12 +25,12 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
     {
         cancellationToken.ThrowIfCancellationRequested();
         var stock = await _database.StringGetAsync(GetWarehouseQuantityQuantityKey(productId, warehouseId));
-        if (stock.IsNullOrEmpty || !stock.IsInteger)
+        if (stock.IsNullOrEmpty)
         {
             return None;
         }
         var reserved = await _database.StringGetAsync(GetReservedQuantityKey(productId, warehouseId));
-        var reservedQ = reserved.IsNullOrEmpty && reserved.IsInteger ? 0 : (int) reserved;
+        var reservedQ = reserved.IsNullOrEmpty ? 0 : (int) reserved;
 
         return new Stock(productId, warehouseId, new StockQuantity((int)stock, reservedQ));
 

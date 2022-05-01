@@ -35,4 +35,15 @@ public class RedisWarehouseRepositoryTests : IClassFixture<RedisFixture>
         Assert.True(result.IsSome);
         Assert.Equal(stock, result.ValueUnsafe());
     }
+
+    [Fact]
+    public async Task GetStock_WhenProductNotExists_ReturnsNone()
+    {
+        var productId = new ProductId(1);
+        var warehouseId = new WarehouseId(1);
+
+        var result = await _repository.GetStock(productId, warehouseId, CancellationToken.None);
+
+        Assert.True(result.IsNone);
+    }
 }
