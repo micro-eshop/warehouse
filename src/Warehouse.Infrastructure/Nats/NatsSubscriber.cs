@@ -37,23 +37,25 @@ internal class WarehouseNatsProductCreatedSubscriber : BackgroundService
     private IAsyncSubscription? _subscription;
     private readonly ISender _sender;
 
+    private readonly Channel<ProductCreated> _channel;
+
     public WarehouseNatsProductCreatedSubscriber(IConnection connection, ILogger<WarehouseNatsProductCreatedSubscriber> logger, ISender sender)
     {
         _connection = connection;
         _logger = logger;
         _sender = sender;
+        _channel = Channel.CreateBounded<ProductCreated>(new BoundedChannelOptions(10) { SingleReader = true, SingleWriter = true, FullMode = BoundedChannelFullMode.Wait });
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var chan = Channel.CreateBounded<ProductCreated>(new BoundedChannelOptions(10) { SingleReader = true, SingleWriter = true, FullMode = BoundedChannelFullMode.Wait });
-        var subscribe = Subscribe(chan.Writer, _logger);
+        var subscribe = Subscribe(_channel.Writer, _logger);
         _subscription = _connection.SubscribeAsync("PRODUCTS.created");
         _subscription.MessageHandler += subscribe;
-        var processor = ProcessMessages(chan, _sender, _logger, stoppingToken);
+        var processor = ProcessMessages(_channel.Reader, _sender, _logger, stoppingToken);
         _subscription.Start();
-        chan.Writer.Complete();
         await processor;
+        _logger.LogInformation("Finish processing");
     }
 
 
@@ -87,6 +89,7 @@ internal class WarehouseNatsProductCreatedSubscriber : BackgroundService
             this._subscription.Unsubscribe();
             this._subscription.Drain();
         }
+        this._channel.Writer.Complete();
         this._connection.Close();
         base.Dispose();
     }

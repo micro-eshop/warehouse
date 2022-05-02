@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using NATS.Client;
+
 using Warehouse.Core.Repositories;
+using Warehouse.Infrastructure.Nats;
 using Warehouse.Infrastructure.Redis;
 using Warehouse.Infrastructure.Repositories;
 
@@ -16,6 +19,12 @@ public static class ServicesCollectionExtensions
         builder.Services.AddSingleton(multiplexer);
         builder.Services.AddTransient<IWarehouseReader, RedisWarehouseRepository>();
         builder.Services.AddTransient<IWarehouseWriter, RedisWarehouseRepository>();
+        builder.Services.AddSingleton(new ConnectionFactory());
+        builder.Services.AddTransient<IConnection>(sp => {
+            var factory = sp.GetService<ConnectionFactory>();
+            return factory!.CreateConnection(builder.Configuration.GetConnectionString("Nats"));
+        });
+        builder.Services.AddHostedService<WarehouseNatsProductCreatedSubscriber>();
         return builder;
     }
 }

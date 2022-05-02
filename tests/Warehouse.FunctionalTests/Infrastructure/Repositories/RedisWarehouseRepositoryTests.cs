@@ -14,7 +14,7 @@ namespace Warehouse.FunctionalTests.Infrastructure.Repositories;
 [Collection(nameof(Warehouse.FunctionalTests.Infrastructure))]
 public class RedisWarehouseRepositoryTests : IClassFixture<RedisFixture> 
 {
-    private RedisWarehouseRepository _repository;
+    private readonly RedisWarehouseRepository _repository;
 
     public RedisWarehouseRepositoryTests(RedisFixture fixture)
     {
