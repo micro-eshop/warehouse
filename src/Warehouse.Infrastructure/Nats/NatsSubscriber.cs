@@ -49,6 +49,7 @@ internal class WarehouseNatsProductCreatedSubscriber : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Start listening for product created events");
         var subscribe = Subscribe(_channel.Writer, _logger);
         _subscription = _connection.SubscribeAsync("PRODUCTS.created");
         _subscription.MessageHandler += subscribe;
@@ -76,7 +77,7 @@ internal class WarehouseNatsProductCreatedSubscriber : BackgroundService
     }
     private static async Task ProcessMessages(ChannelReader<ProductCreated> reader, ISender sender, ILogger logger, CancellationToken cancellationToken)
     {
-        await foreach (var msg in reader.ReadAllAsync(cancellationToken))
+        await foreach (var msg in reader.ReadAllAsync(cancellationToken).WithCancellation(cancellationToken))
         {
             logger.LogProductsCreated(msg);
             await sender.Send(new CreateWarehouseStateCommand(new Core.Model.ProductId(msg.Id)), cancellationToken);
@@ -87,9 +88,9 @@ internal class WarehouseNatsProductCreatedSubscriber : BackgroundService
     {
         if(_subscription is not null) {
             this._subscription.Unsubscribe();
-            this._subscription.Drain();
         }
         this._channel.Writer.Complete();
+        this._connection.Drain();
         this._connection.Close();
         base.Dispose();
     }
