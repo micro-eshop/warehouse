@@ -22,6 +22,8 @@ nuget Microsoft.Extensions.Hosting.Abstractions
 nuget StronglyTypedId prerelease
 nuget NATS.Client  
 nuget Microsoft.Tye.Extensions.Configuration
+nuget FastEndpoints
+nuget FastEndpoints.Swagger
 
 nuget MediatR
 nuget MediatR.Extensions.Microsoft.DependencyInjection

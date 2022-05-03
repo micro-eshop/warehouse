@@ -1,3 +1,5 @@
 Swashbuckle.AspNetCore
 MediatR.Extensions.Microsoft.DependencyInjection
 AspNetCore.HealthChecks.Redis
+FastEndpoints
+FastEndpoints.Swagger
