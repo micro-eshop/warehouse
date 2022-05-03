@@ -18,7 +18,7 @@ public class RedisWarehouseRepositoryTests : IClassFixture<RedisFixture>
 
     public RedisWarehouseRepositoryTests(RedisFixture fixture)
     {
-        _repository = new RedisWarehouseRepository(fixture.RedisConnection);
+        _repository = new RedisWarehouseRepository(fixture.RedisConnection.GetDatabase());
     }
 
     [Fact]

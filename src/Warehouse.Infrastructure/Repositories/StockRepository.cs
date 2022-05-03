@@ -16,9 +16,9 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
 {
     private readonly IDatabase _database;
 
-    public RedisWarehouseRepository(IConnectionMultiplexer connectionMultiplexer)
+    public RedisWarehouseRepository(IDatabase database)
     {
-        _database = connectionMultiplexer.GetDatabase();
+        _database = database;
     }
 
     public async Task<Option<Stock>> GetStock(ProductId productId, WarehouseId warehouseId, CancellationToken cancellationToken)
@@ -33,7 +33,6 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
         var reservedQ = reserved.IsNullOrEmpty ? 0 : (int) reserved;
 
         return new Stock(productId, warehouseId, new StockQuantity((int)stock, reservedQ));
-
     }
 
     private static string GetReservedQuantityKey(ProductId productId, WarehouseId warehouseId)
