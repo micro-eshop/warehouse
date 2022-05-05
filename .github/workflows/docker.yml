@@ -2,7 +2,7 @@ name: Build Api Image
 on:
   workflow_run:
     workflows: ["Build Warehouse"]
-    branches: [master]
+    branches: [main]
     types: 
       - completed
 env:
