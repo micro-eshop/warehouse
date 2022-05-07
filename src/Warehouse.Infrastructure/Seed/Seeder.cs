@@ -16,7 +16,7 @@ public static class DataSeed
         var sender = scope.ServiceProvider.GetService<ISender>();
         foreach (var id in Enumerable.Range(1, 20))
         {
-            await sender.Send(new CreateWarehouseStateCommand(new ProductId(id)));
+            await sender!.Send(new CreateWarehouseStateCommand(new ProductId(id)));
         }
     }
 }
