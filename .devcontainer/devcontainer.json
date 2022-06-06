@@ -5,29 +5,35 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
-	"settings": {
-		"omnisharp.useModernNet": true,
-		"omnisharp.useGlobalMono": "never",
-        "csharp.semanticHighlighting.enabled": true,
-		"editor.semanticHighlighting.enabled": true,
-		"omnisharp.enableRoslynAnalyzers": true,
-		"omnisharp.enableEditorConfigSupport": true
-		
-	},
 
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-dotnettools.csharp",
+				"josefpihrt-vscode.roslynator",
+				"wakatime.vscode-wakatime",
+				"GitHub.copilot",
+				"Fudge.auto-using",
+				"formulahendry.dotnet-test-explorer",
+				"usernamehw.errorlens",
+				"pflannery.vscode-versionlens"
+			],
+			"settings": {
+				"omnisharp.useModernNet": true,
+				"omnisharp.useGlobalMono": "never",
+				"csharp.semanticHighlighting.enabled": true,
+				"editor.semanticHighlighting.enabled": true,
+				"omnisharp.enableRoslynAnalyzers": true,
+				"omnisharp.enableEditorConfigSupport": true
+				
+			}
+		}
+	},
 	// Set *default* container specific settings.json values on container create.
 
     // Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-dotnettools.csharp",
-		"josefpihrt-vscode.roslynator",
-		"wakatime.vscode-wakatime",
-		"GitHub.copilot",
-		"Fudge.auto-using",
-		"formulahendry.dotnet-test-explorer",
-		"usernamehw.errorlens",
-		"pflannery.vscode-versionlens"
-	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
