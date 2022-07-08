@@ -16,6 +16,12 @@ NATS.Client
 Microsoft.Tye.Extensions.Configuration
 MediatR
 
+OpenTelemetry.Extensions.Hosting
+OpenTelemetry.Instrumentation.AspNetCore
+OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs
+OpenTelemetry.Exporter.OpenTelemetryProtocol
+OpenTelemetry.Instrumentation.StackExchangeRedis
+
 Roslynator.Analyzers
 SonarAnalyzer.CSharp
 AsyncFixer

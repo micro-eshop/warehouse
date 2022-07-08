@@ -24,6 +24,11 @@ nuget NATS.Client
 nuget Microsoft.Tye.Extensions.Configuration
 nuget FastEndpoints
 nuget FastEndpoints.Swagger
+nuget OpenTelemetry.Extensions.Hosting
+nuget OpenTelemetry.Instrumentation.AspNetCore
+nuget OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs
+nuget OpenTelemetry.Exporter.OpenTelemetryProtocol
+nuget OpenTelemetry.Instrumentation.StackExchangeRedis
 
 nuget MediatR
 nuget MediatR.Extensions.Microsoft.DependencyInjection
