@@ -45,9 +45,9 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
         return $"{{stock/{warehouseId.Value.ToString()}}}/{productId.Value.ToString()}";
     }
 
-    public async Task<Result<Unit>> Write(IReadOnlyCollection<Stock> stocks, CancellationToken cancellationToken)
+    public async Task<Either<Exception, Unit>> Write(IReadOnlyCollection<Stock> stocks, CancellationToken cancellationToken)
     {
-        List<Task> addTasks = new List<Task>(stocks.Count * 2);
+        List<Task> addTasks = new(stocks.Count * 2);
         IBatch batch = _database.CreateBatch();
 
         foreach(var stock in stocks)
@@ -59,6 +59,6 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
         Task[] tasks = addTasks.ToArray();
         await Task.WhenAll(tasks);
 
-        return Result.UnitResult;
+        return Right(Unit.Default);
     }
 }

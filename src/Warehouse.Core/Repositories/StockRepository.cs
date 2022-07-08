@@ -11,5 +11,5 @@ public interface IWarehouseReader
 
 public interface IWarehouseWriter
 {
-    Task<Result<Unit>> Write(IReadOnlyCollection<Stock> stocks, CancellationToken cancellationToken);
+    Task<Either<Exception, Unit>> Write(IReadOnlyCollection<Stock> stocks, CancellationToken cancellationToken);
 }

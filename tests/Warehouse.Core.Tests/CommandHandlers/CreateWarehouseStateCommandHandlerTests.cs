@@ -6,10 +6,11 @@ using Moq;
 using Warehouse.Core.CommandHandlers;
 using Warehouse.Core.Commands;
 using Warehouse.Core.Model;
-using Warehouse.Core.Repositories;
 
 using Xunit;
 using MediatR;
+
+using Warehouse.Core.Repoisories;
 
 namespace Warehouse.Core.Tests.CommandHandlers;
 

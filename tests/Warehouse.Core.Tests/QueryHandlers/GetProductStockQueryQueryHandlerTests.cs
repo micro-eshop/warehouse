@@ -6,12 +6,14 @@ using LanguageExt;
 using Warehouse.Core.Model;
 using Warehouse.Core.Queries;
 using Warehouse.Core.QueryHandlers;
-using Warehouse.Core.Repositories;
+
 using static LanguageExt.Prelude;
 using FluentAssertions;
 using Xunit;
 using LanguageExt.UnsafeValueAccess;
 using System;
+
+using Warehouse.Core.Repoisories;
 
 namespace Warehouse.Core.Tests.QueryHandlers;
 
