@@ -41,5 +41,5 @@ nuget xunit
 nuget xunit.runner.visualstudio
 nuget Moq
 nuget coverlet.collector
-nuget DotNet.Testcontainers prerelease
+nuget Testcontainers
 nuget Microsoft.NET.Test.Sdk
