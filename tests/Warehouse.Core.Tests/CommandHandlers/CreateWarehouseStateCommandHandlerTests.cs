@@ -2,15 +2,19 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 
+using LanguageExt;
+
 using Moq;
 using Warehouse.Core.CommandHandlers;
 using Warehouse.Core.Commands;
 using Warehouse.Core.Model;
 
 using Xunit;
-using MediatR;
 
-using Warehouse.Core.Repoisories;
+using static LanguageExt.Prelude;
+using Warehouse.Core.Repositories;
+
+using Unit = MediatR.Unit;
 
 namespace Warehouse.Core.Tests.CommandHandlers;
 
@@ -22,7 +26,7 @@ public class CreateWarehouseStateCommandHandlersTests
         // Arrange
         var repo = new Mock<IWarehouseWriter>();
         repo.Setup(x => x.Write(It.IsAny<IReadOnlyCollection<Stock>>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(Result.UnitResult));
+            .Returns(Task.FromResult<Either<Exception, LanguageExt.Unit>>(Right(LanguageExt.Unit.Default)));
         var productId = new ProductId(1);
         var command = new CreateWarehouseStateCommand(productId);
         var handler = new CreateWarehouseStateCommandHandler(repo.Object);

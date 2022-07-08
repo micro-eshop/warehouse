@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 using Moq;
 using LanguageExt;
 using Warehouse.Core.Model;
@@ -11,9 +8,7 @@ using static LanguageExt.Prelude;
 using FluentAssertions;
 using Xunit;
 using LanguageExt.UnsafeValueAccess;
-using System;
-
-using Warehouse.Core.Repoisories;
+using Warehouse.Core.Repositories;
 
 namespace Warehouse.Core.Tests.QueryHandlers;
 
