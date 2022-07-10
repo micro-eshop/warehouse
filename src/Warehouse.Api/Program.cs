@@ -4,12 +4,23 @@ using Warehouse.Core.QueryHandlers;
 using Warehouse.Infrastructure.Extensions;
 using FastEndpoints;
 using FastEndpoints.Swagger;
-using Warehouse.Infrastructure.Seed;
 
+using OpenTelemetry.Trace;
+
+using Warehouse.Infrastructure.Seed;
+using Warehouse.Infrastructure.Telemetry;
+
+var telemetry = new OpenTelemetryConfiguration() { ServiceName = "warehouse", ServiceVersion = "1.0.0" };
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddOpenTelemetryLogging(telemetry);
+builder.AddOpenTelemetryTracing(telemetry, b =>
+{
+    b.AddRedisInstrumentation();
+    b.AddNatsSource();
+});
+builder.AddOpenTelemetryMetrics(telemetry);
 // Add services to the container.
-builder.UseLogging("Warehouse.Api");
 await builder.AddInfrastructure();
 builder.Services.AddControllers();
 builder.Services.AddMediatR(typeof(GetProductStockQueryQueryHandler));
@@ -27,7 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUi3(s => s.ConfigureDefaults());
 }
 
-app.UseRequestLogging();
+app.UseHttpLogging();
 
 app.UseAuthorization();
 app.UseFastEndpoints();

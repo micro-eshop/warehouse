@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  app:
+    image: devmikroblog
+    ports:
+      - 5005:80
+    environment:
+      - RabbitMq__AmqpConnection=amqp://guest:guest@rabbitmq:5672
+      - ConnectionStrings__PostsDb=Host=db;Port=5432;User Id=postgres;Password=postgres;Database=postgres;
+      - Seq__Url=http://seq:5341
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OPENTELEMETRY_OLTP_EXPORTER_ENABLED=true
+    depends_on:
+      - "db"
+      - "seq"
+      - "nats"
+  db:
+    image: redis:6-bullseye
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+  nats:
+    image: 'nats:latest'
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+  seq:
+    image: datalust/seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:80
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+    depends_on:
+      - "nats"
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.54.0
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "9411"   # Zipkin receiver
+      - "55679:55679" # zpages extension
+      - "4317:4317"
+    depends_on:
+      - jaeger
+      - zipkin

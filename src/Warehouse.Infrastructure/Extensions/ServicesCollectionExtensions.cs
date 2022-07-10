@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using NATS.Client;
 
+using OpenTelemetry.Trace;
+
 using StackExchange.Redis;
 
 using Warehouse.Core.Repositories;
@@ -39,5 +41,10 @@ public static class ServicesCollectionExtensions
         });
         builder.Services.AddHostedService<WarehouseNatsProductCreatedSubscriber>();
         return builder;
+    }
+
+    public static TracerProviderBuilder AddNatsSource(this TracerProviderBuilder builder)
+    {
+        return builder.AddSource(NatsOpenTelemetry.NatsOpenTelemetrySourceName);
     }
 }

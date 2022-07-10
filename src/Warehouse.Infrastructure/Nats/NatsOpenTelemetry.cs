@@ -11,9 +11,9 @@ namespace Warehouse.Infrastructure.Nats;
 
 internal static class NatsOpenTelemetry
 {
-    public const string RabbitMqOpenTelemetrySourceName = $"{nameof(Warehouse)}.Rabbitmq";
+    public const string NatsOpenTelemetrySourceName = $"{nameof(Warehouse)}.Rabbitmq";
     
-    public readonly static ActivitySource NatsSource = new(RabbitMqOpenTelemetrySourceName, "v1.0.0");
+    public readonly static ActivitySource NatsSource = new(NatsOpenTelemetrySourceName, "v1.0.0");
     
     public static void AddActivityToHeader(Activity activity, MsgHeader? props)
     {
