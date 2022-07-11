@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -112,6 +113,9 @@ public static class OpenTelemetryExtensions
                 b.IncludeFormattedMessage = true;
                 b.IncludeScopes = true;
                 b.ParseStateValues = true;
+                b.SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion));
                 setup?.Invoke(b);
                 if (config.OltpExporterEnabled)
                 {
@@ -129,12 +133,21 @@ public static class OpenTelemetryExtensions
         SetupWithDefaults(config);
         if (config.OpenTelemetryLoggingEnabled)
         {
-            builder.Logging.AddOpenTelemetry(b =>
+            builder.Logging
+                .ClearProviders()
+                .AddOpenTelemetry(b =>
             {
                 b.IncludeFormattedMessage = true;
                 b.IncludeScopes = true;
                 b.ParseStateValues = true;
+                b.SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion));
                 setup?.Invoke(b);
+                b.AddConsoleExporter(options =>
+                {
+                    options.Targets = ConsoleExporterOutputTargets.Console;
+                });
                 if (config.OltpExporterEnabled)
                 {
                     b.AddOtlpExporter();
@@ -155,6 +168,9 @@ public static class OpenTelemetryExtensions
             builder.Services.AddOpenTelemetryMetrics(b =>
             {
                 b.AddAspNetCoreInstrumentation();
+                b.SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion));
                 setup?.Invoke(b);
                 if (config.OltpExporterEnabled)
                 {
@@ -175,6 +191,9 @@ public static class OpenTelemetryExtensions
             builder.Services.AddOpenTelemetryMetrics(b =>
             {
                 b.AddAspNetCoreInstrumentation();
+                b.SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion));
                 setup?.Invoke(b);
                 if (config.OltpExporterEnabled)
                 {

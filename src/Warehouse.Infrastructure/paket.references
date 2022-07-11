@@ -29,3 +29,4 @@ LanguageExt.Core
 System.Linq.Async
 ClrHeapAllocationAnalyzer
 StackExchange.Redis
+OpenTelemetry.Exporter.Console

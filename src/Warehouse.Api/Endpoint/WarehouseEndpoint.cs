@@ -29,7 +29,7 @@ public class GetProductStockEndpoint : Endpoint<GetProductStockRequest, GetProdu
 
     public override async Task HandleAsync(GetProductStockRequest req, CancellationToken ct)
     {
-        _logger.LogInformation("Witam");
+        _logger.LogInformation("xDDDD");
         var result = await _sender.Send(new GetProductStockQuery(new ProductId(req.ProductId), new WarehouseId(req.WarehouseId)), ct);
         if (result.IsNone)
         {

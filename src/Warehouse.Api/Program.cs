@@ -10,7 +10,7 @@ using OpenTelemetry.Trace;
 using Warehouse.Infrastructure.Seed;
 using Warehouse.Infrastructure.Telemetry;
 
-var telemetry = new OpenTelemetryConfiguration() { ServiceName = "warehouse", ServiceVersion = "1.0.0" };
+var telemetry = new OpenTelemetryConfiguration() { ServiceName = "warehouse", ServiceVersion = "1.0.0", OpenTelemetryLoggingEnabled = true};
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddOpenTelemetryLogging(telemetry);
