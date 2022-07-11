@@ -272,7 +272,7 @@ NUGET
     Serilog.Exceptions (8.3)
       Serilog (>= 2.8)
       System.Reflection.TypeExtensions (>= 4.7)
-    Serilog.Extensions.Hosting (4.2)
+    Serilog.Extensions.Hosting (5.0)
       Microsoft.Extensions.DependencyInjection.Abstractions (>= 3.1.8)
       Microsoft.Extensions.Hosting.Abstractions (>= 3.1.8)
       Microsoft.Extensions.Logging.Abstractions (>= 3.1.8)

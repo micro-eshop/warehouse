@@ -12,10 +12,12 @@ namespace Warehouse.Api.Endpoints;
 public class GetProductStockEndpoint : Endpoint<GetProductStockRequest, GetProductStockResponse>
 {
     private readonly ISender _sender;
+    private readonly ILogger<GetProductStockEndpoint> _logger;
 
-    public GetProductStockEndpoint(ISender sender)
+    public GetProductStockEndpoint(ISender sender, ILogger<GetProductStockEndpoint> logger)
     {
         _sender = sender;
+        _logger = logger;
     }
 
     public override void Configure()
@@ -27,7 +29,7 @@ public class GetProductStockEndpoint : Endpoint<GetProductStockRequest, GetProdu
 
     public override async Task HandleAsync(GetProductStockRequest req, CancellationToken ct)
     {
-
+        _logger.LogInformation("Witam");
         var result = await _sender.Send(new GetProductStockQuery(new ProductId(req.ProductId), new WarehouseId(req.WarehouseId)), ct);
         if (result.IsNone)
         {

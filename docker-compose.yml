@@ -2,19 +2,19 @@ version: '3.8'
 
 services:
   app:
-    image: devmikroblog
+    image: warehouse
     ports:
       - 5005:80
     environment:
-      - RabbitMq__AmqpConnection=amqp://guest:guest@rabbitmq:5672
-      - ConnectionStrings__PostsDb=Host=db;Port=5432;User Id=postgres;Password=postgres;Database=postgres;
-      - Seq__Url=http://seq:5341
+      - ConnectionStrings__Redis=db:6379
+      - ConnectionStrings__Nats=nats://nats:4222
       - ASPNETCORE_ENVIRONMENT=Development
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OPENTELEMETRY_OLTP_EXPORTER_ENABLED=true
+      - OPENTELEMETRY_ENABLED=true
+      - OPENTELEMETRY_LOGGING_ENABLED=true
     depends_on:
       - "db"
-      - "seq"
       - "nats"
   db:
     image: redis:6-bullseye
@@ -27,14 +27,6 @@ services:
       - 4222:4222
       - 6222:6222
       - 8222:8222
-  seq:
-    image: datalust/seq
-    restart: unless-stopped
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - 5341:80
-
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
