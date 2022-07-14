@@ -30,7 +30,7 @@ nuget OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs
 nuget OpenTelemetry.Exporter.OpenTelemetryProtocol
 nuget OpenTelemetry.Instrumentation.StackExchangeRedis
 nuget OpenTelemetry.Exporter.Console
-
+nuget OpenTelemetry.Extensions
 nuget MediatR
 nuget MediatR.Extensions.Microsoft.DependencyInjection
 nuget Roslynator.Analyzers

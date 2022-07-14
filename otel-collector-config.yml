@@ -15,9 +15,7 @@ exporters:
     sampling_thereafter: 200
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
-  file:
-    path: /etc/output/logs.json
-    
+
 processors:
   batch:
 
@@ -36,4 +34,4 @@ service:
     logs:
       receivers: [otlp]
       processors: []
-      exporters: [logging, file]
+      exporters: [logging]

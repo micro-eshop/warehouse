@@ -128,6 +128,7 @@ public static class OpenTelemetryExtensions
             builder.Logging.SetMinimumLevel(LogLevel.Information);
             builder.Logging.AddOpenTelemetry(b =>
             {
+                b.AttachLogsToActivityEvent();
                 b.IncludeFormattedMessage = true;
                 b.IncludeScopes = true;
                 b.ParseStateValues = true;

@@ -29,10 +29,10 @@ public class GetProductStockEndpoint : Endpoint<GetProductStockRequest, GetProdu
 
     public override async Task HandleAsync(GetProductStockRequest req, CancellationToken ct)
     {
-        _logger.LogInformation("xDDDD {ProductId}", req.ProductId);
         var result = await _sender.Send(new GetProductStockQuery(new ProductId(req.ProductId), new WarehouseId(req.WarehouseId)), ct);
         if (result.IsNone)
         {
+            _logger.LogWarning("Warehouse state not found, ProductId={ProductId} ShopNumber={WarehouseId}", req.ProductId, req.WarehouseId);
             await SendNotFoundAsync();
             return;
         }
