@@ -12,7 +12,6 @@ using OpenTelemetry.Trace;
 
 namespace Warehouse.Infrastructure.Telemetry;
 
-
 public class OpenTelemetryConfiguration
 {
     private bool _openTelemetryEnabled = false;
@@ -29,7 +28,7 @@ public class OpenTelemetryConfiguration
         get =>
             string.IsNullOrEmpty(_serviceName)
                 ? Environment.GetEnvironmentVariable("SERVICE_NAME") ??
-                  Assembly.GetExecutingAssembly().FullName 
+                  Assembly.GetExecutingAssembly().FullName
                 : _serviceName;
         set => _serviceName = value;
     }
@@ -42,36 +41,46 @@ public class OpenTelemetryConfiguration
                 : _serviceVersion;
         set => _serviceVersion = value;
     }
-    
+
     public bool OpenTelemetryEnabled
     {
         get =>
             bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_ENABLED"),
-                out var openTelemetryEnabled) ? openTelemetryEnabled : _openTelemetryEnabled;
+                out var openTelemetryEnabled)
+                ? openTelemetryEnabled
+                : _openTelemetryEnabled;
         set => _openTelemetryEnabled = value;
     }
 
     public bool OpenTelemetryLoggingEnabled
     {
-        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_LOGGING_ENABLED"), out var otle) ? otle : _openTelemetryLoggingEnabled;
+        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_LOGGING_ENABLED"), out var otle)
+            ? otle
+            : _openTelemetryLoggingEnabled;
         set => _openTelemetryLoggingEnabled = value;
     }
 
     public bool OpenTelemetryMetricsEnabled
     {
-        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_METRICS_ENABLED"), out var ome) ? ome : _openTelemetryMetricsEnabled;
+        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_METRICS_ENABLED"), out var ome)
+            ? ome
+            : _openTelemetryMetricsEnabled;
         set => _openTelemetryMetricsEnabled = value;
     }
 
     public bool OltpExporterEnabled
     {
-        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_OLTP_EXPORTER_ENABLED"), out var ome) ? ome : _oltpExporterEnabled;
+        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_OLTP_EXPORTER_ENABLED"), out var ome)
+            ? ome
+            : _oltpExporterEnabled;
         set => _oltpExporterEnabled = value;
     }
 
     public bool ConsoleExporterEnabled
     {
-        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_CONSOLE_EXPORTER_ENABLED"), out var ome) ? ome : _consoleExporterEnabled;
+        get => bool.TryParse(Environment.GetEnvironmentVariable("OPENTELEMETRY_CONSOLE_EXPORTER_ENABLED"), out var ome)
+            ? ome
+            : _consoleExporterEnabled;
         set => _consoleExporterEnabled = value;
     }
 }
@@ -82,6 +91,7 @@ public static class OpenTelemetryExtensions
         .CreateDefault()
         .AddTelemetrySdk()
         .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion);
+
     public static WebApplicationBuilder AddOpenTelemetryTracing(this WebApplicationBuilder builder,
         OpenTelemetryConfiguration? configure = null, Action<TracerProviderBuilder>? setup = null)
     {
@@ -90,16 +100,20 @@ public static class OpenTelemetryExtensions
         {
             builder.Services.AddOpenTelemetryTracing(b =>
             {
-                b.AddAspNetCoreInstrumentation();
+                b.AddAspNetCoreInstrumentation(options =>
+                {
+                    options.RecordException = true;
+                });
                 setup?.Invoke(b);
                 b.SetResourceBuilder(GetResourceBuilder(config));
-                
+
                 if (config.OltpExporterEnabled)
                 {
                     b.AddOtlpExporter();
                 }
             });
         }
+
         return builder;
     }
 
@@ -109,25 +123,23 @@ public static class OpenTelemetryExtensions
         var config = configure ?? new OpenTelemetryConfiguration();
         if (config.OpenTelemetryLoggingEnabled)
         {
-            builder.Logging
-                .ClearProviders()
-                .AddOpenTelemetry(b =>
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.SetMinimumLevel(LogLevel.Information);
+            builder.Logging.AddOpenTelemetry(b =>
             {
                 b.IncludeFormattedMessage = true;
                 b.IncludeScopes = true;
                 b.ParseStateValues = true;
                 b.SetResourceBuilder(GetResourceBuilder(config));
                 setup?.Invoke(b);
-                b.AddConsoleExporter(options =>
-                {
-                    options.Targets = ConsoleExporterOutputTargets.Console;
-                });
                 if (config.OltpExporterEnabled)
                 {
                     b.AddOtlpExporter();
                 }
             });
         }
+
         return builder;
     }
 
@@ -148,6 +160,7 @@ public static class OpenTelemetryExtensions
                 }
             });
         }
+
         return builder;
     }
 }
