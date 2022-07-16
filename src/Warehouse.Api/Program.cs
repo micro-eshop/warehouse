@@ -23,13 +23,13 @@ builder.AddOpenTelemetryMetrics(telemetry);
 // Add services to the container.
 await builder.AddInfrastructure();
 builder.Services.AddControllers();
-builder.Services.AddMediatR(typeof(GetProductStockQueryQueryHandler));
+builder.Services.AddMediatR(new []{typeof(GetProductStockQueryQueryHandler)});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerDoc();
 builder.Services.AddFastEndpoints();
 var app = builder.Build();
 
-await DataSeed.InitDb(app);
+await app.InitDb();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

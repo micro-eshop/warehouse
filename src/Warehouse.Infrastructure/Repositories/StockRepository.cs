@@ -56,8 +56,7 @@ internal class RedisWarehouseRepository : IWarehouseReader, IWarehouseWriter
             addTasks.Add(batch.StringSetAsync(GetReservedQuantityKey(stock.ProductId, stock.WarehouseId), stock.Quantity.ReservedQuantity));
         }
         batch.Execute();
-        Task[] tasks = addTasks.ToArray();
-        await Task.WhenAll(tasks);
+        await Task.WhenAll(addTasks);
 
         return Right(Unit.Default);
     }
