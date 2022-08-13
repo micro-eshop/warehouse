@@ -12,7 +12,7 @@ Serilog.Formatting.Elasticsearch
 Serilog.Sinks.Seq
 Microsoft.Extensions.Hosting.Abstractions
 StronglyTypedId
-NATS.Client  
+RabbitMQ.Stream.Client 
 Microsoft.Tye.Extensions.Configuration
 MediatR
 

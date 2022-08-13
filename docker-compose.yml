@@ -7,7 +7,7 @@ services:
       - 5005:80
     environment:
       - ConnectionStrings__Redis=db:6379
-      - ConnectionStrings__Nats=nats://nats:4222
+      - ConnectionStrings__RabbitMq=rabbitmq-stream://guest:guest@rabbitmq:5552/%2f
       - ASPNETCORE_ENVIRONMENT=Development
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OPENTELEMETRY_OLTP_EXPORTER_ENABLED=true
@@ -15,25 +15,29 @@ services:
       - OPENTELEMETRY_LOGGING_ENABLED=true
     depends_on:
       - "db"
-      - "nats"
+      - "rabbitmq"
   db:
     image: redis:6-bullseye
     restart: unless-stopped
     ports:
       - "6379:6379"
-  nats:
-    image: 'nats:latest'
+  rabbitmq:
+    image: rabbitmq:3.10-management-alpine
+    restart: unless-stopped
     ports:
-      - 4222:4222
-      - 6222:6222
-      - 8222:8222
+      - 5672:5672
+      - 15672:15672
+      - 5552:5552
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
       - "6831:6831/udp"
       - "16686:16686"
-    depends_on:
-      - "nats"
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin

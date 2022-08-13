@@ -20,17 +20,18 @@ nuget Serilog.Formatting.Elasticsearch
 nuget Serilog.Sinks.Seq
 nuget Microsoft.Extensions.Hosting.Abstractions
 nuget StronglyTypedId prerelease
-nuget NATS.Client  
+nuget RabbitMQ.Stream.Client prerelease
 nuget Microsoft.Tye.Extensions.Configuration
 nuget FastEndpoints
 nuget FastEndpoints.Swagger
-nuget OpenTelemetry.Extensions.Hosting
-nuget OpenTelemetry.Instrumentation.AspNetCore
-nuget OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs
-nuget OpenTelemetry.Exporter.OpenTelemetryProtocol
-nuget OpenTelemetry.Instrumentation.StackExchangeRedis
-nuget OpenTelemetry.Exporter.Console
-nuget OpenTelemetry.Extensions
+nuget OpenTelemetry.Extensions.Hosting prerelease
+nuget OpenTelemetry.Instrumentation.AspNetCore prerelease
+nuget OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs prerelease
+nuget OpenTelemetry.Exporter.OpenTelemetryProtocol prerelease
+nuget OpenTelemetry.Instrumentation.StackExchangeRedis prerelease
+nuget OpenTelemetry.Exporter.Console prerelease
+nuget OpenTelemetry.Extensions prerelease
+nuget OpenTelemetry prerelease
 nuget MediatR
 nuget MediatR.Extensions.Microsoft.DependencyInjection
 nuget Roslynator.Analyzers
