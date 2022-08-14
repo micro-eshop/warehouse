@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using RabbitMQ.Stream.Client;
+using RabbitMQ.Stream.Client.Reliable;
 
 using Warehouse.Core.Commands;
 using Warehouse.Infrastructure.Logging;
@@ -51,8 +52,8 @@ internal class WarehouseRabbitMqProductCreatedSubscriber : BackgroundService
         _logger.LogInformation("Start listening for product created events");
         await _system.CreateStream(new StreamSpec(ProductCreatedStreamName) { MaxAge = TimeSpan.FromHours(24) });
         var consume = ProcessMessages(_serviceProvider);
-        using var consumer = await _system.CreateConsumer(
-            new ConsumerConfig
+        var consumer = await ReliableConsumer.CreateReliableConsumer(
+            new ReliableConsumerConfig
             {
                 Reference = "warehouse.api",
                 Stream = ProductCreatedStreamName,

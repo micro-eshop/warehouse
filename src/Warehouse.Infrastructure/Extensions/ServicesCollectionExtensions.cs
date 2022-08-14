@@ -41,12 +41,16 @@ public static class ServicesCollectionExtensions
     private static async Task<WebApplicationBuilder> AddRabbitmq(this WebApplicationBuilder builder)
     {
         var rabbitmqCfg = builder.Configuration.GetSection("RabbitMq").Get<RabbitmqConfig>();
+        var rabbitMqUrl = new UriBuilder(rabbitmqCfg.Endpoint);
+        IPAddress ipAddress = (await Dns.GetHostEntryAsync(rabbitMqUrl.Host)).AddressList.FirstOrDefault() ??
+                              IPAddress.Loopback;
+        var ipEndPoint = new IPEndPoint(ipAddress, 5552);
+        Console.WriteLine(rabbitmqCfg.Endpoint);
         var config = new StreamSystemConfig
         {
             UserName = rabbitmqCfg.UserName,
             Password = rabbitmqCfg.Password,
-            VirtualHost = "/",
-            Endpoints = new List<EndPoint>() { new DnsEndPoint(rabbitmqCfg.Endpoint, rabbitmqCfg.Port)}
+            Endpoints = new List<EndPoint>() { ipEndPoint }
         };
         var system = await StreamSystem.Create(config);
 

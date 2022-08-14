@@ -7,7 +7,7 @@ services:
       - 5005:80
     environment:
       - ConnectionStrings__Redis=db:6379
-      - ConnectionStrings__RabbitMq=rabbitmq-stream://guest:guest@rabbitmq:5552/%2f
+      - RabbitMq__Endpoint=rabbitmq
       - ASPNETCORE_ENVIRONMENT=Development
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OPENTELEMETRY_OLTP_EXPORTER_ENABLED=true
