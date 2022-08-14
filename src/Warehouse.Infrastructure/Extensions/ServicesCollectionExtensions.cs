@@ -1,30 +1,31 @@
+using System.Net;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using NATS.Client;
-
 using OpenTelemetry.Trace;
+
+using RabbitMQ.Stream.Client;
 
 using StackExchange.Redis;
 
 using Warehouse.Core.Repositories;
-using Warehouse.Infrastructure.Nats;
+using Warehouse.Infrastructure.Rabbitmq;
 using Warehouse.Infrastructure.Redis;
 using Warehouse.Infrastructure.Repositories;
 
 namespace Warehouse.Infrastructure.Extensions;
-
-internal record NatsConnectionString(string Connection);
 internal record RedisDatabaseNumber(int DatabaseNumber);
 
 public static class ServicesCollectionExtensions
 {
     public static async Task<WebApplicationBuilder> AddInfrastructure(this WebApplicationBuilder builder)
     {
+
+        builder = await AddRabbitmq(builder);
         var multiplexer = await ConnectionMultiplexerProvider.CreateMultiplexer(builder.Configuration.GetConnectionString("Redis"));
         builder.Services.AddSingleton(multiplexer);
-        builder.Services.AddSingleton(new NatsConnectionString(builder.Configuration.GetConnectionString("Nats")));
         builder.Services.AddSingleton(new RedisDatabaseNumber(int.Parse(builder.Configuration["Redis:Database"])));
         builder.Services.AddTransient<IDatabase>(sp => {
             var multiplexer = sp.GetService<IConnectionMultiplexer>();
@@ -33,18 +34,29 @@ public static class ServicesCollectionExtensions
         });
         builder.Services.AddTransient<IWarehouseReader, RedisWarehouseRepository>();
         builder.Services.AddTransient<IWarehouseWriter, RedisWarehouseRepository>();
-        builder.Services.AddSingleton(new ConnectionFactory());
-        builder.Services.AddTransient<IConnection>(sp => {
-            var factory = sp.GetService<ConnectionFactory>();
-            var connectionString = sp.GetService<NatsConnectionString>();
-            return factory!.CreateConnection(connectionString!.Connection);
-        });
-        builder.Services.AddHostedService<WarehouseNatsProductCreatedSubscriber>();
+        builder.Services.AddHostedService<WarehouseRabbitMqProductCreatedSubscriber>();
+        return builder;
+    }
+
+    private static async Task<WebApplicationBuilder> AddRabbitmq(this WebApplicationBuilder builder)
+    {
+        var rabbitmqCfg = builder.Configuration.GetSection("RabbitMq").Get<RabbitmqConfig>();
+        var config = new StreamSystemConfig
+        {
+            UserName = rabbitmqCfg.UserName,
+            Password = rabbitmqCfg.Password,
+            VirtualHost = "/",
+            Endpoints = new List<EndPoint>() { new DnsEndPoint(rabbitmqCfg.Endpoint, rabbitmqCfg.Port)}
+        };
+        var system = await StreamSystem.Create(config);
+
+        builder.Services.AddSingleton(system);
+
         return builder;
     }
 
     public static TracerProviderBuilder AddNatsSource(this TracerProviderBuilder builder)
     {
-        return builder.AddSource(NatsOpenTelemetry.NatsOpenTelemetrySourceName);
+        return builder.AddSource(RabbitmqOpenTelemetry.RabbitMqOpenTelemetrySourceName);
     }
 }

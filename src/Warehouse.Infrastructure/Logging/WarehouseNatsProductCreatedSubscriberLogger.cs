@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
-
-using Warehouse.Infrastructure.Nats;
+using Warehouse.Infrastructure.Rabbitmq;
 
 namespace Warehouse.Infrastructure.Logging;
 
